@@ -1,0 +1,61 @@
+﻿@model MVCMusic.Models.Album
+
+@{
+    ViewData["Title"] = "Details";
+    var photoPath = "~/covers/" + (Model.AlbumCover ?? "blank.png");
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Album</h4>
+    <hr />
+    <img src="@photoPath"
+         height="250" width="250"
+         asp-append-version="true"/>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Year)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Year)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RecordLabel)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RecordLabel)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Artist)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.ArtistId != null)
+            {
+                <a asp-controller="Artists" asp-action="Details" asp-route-id="@Model.ArtistId">@Html.DisplayFor(model => model.Artist.FullName)</a>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Songs)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var song in Model.Songs)
+            {
+                <a asp-controller="Songs" asp-action="Details" asp-route-id="@song.Id">
+                    @song.Name
+                </a> <br />
+            }
+        </dd>
+
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

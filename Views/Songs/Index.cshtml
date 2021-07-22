@@ -1,0 +1,83 @@
+﻿@model MVCMusic.ViewModels.SongsViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 style="text-align: center">Songs</h1>
+
+<p style="text-align: center">
+    <a asp-action="Create">Create New</a>
+</p>
+<form asp-controller="Songs" asp-action="Index" method="get">
+    <p style="text-align: center">
+        <input style="width: 40%; margin: 5px; padding: 5px" type="text" asp-for="SearchName" placeholder="Song name" />
+        <select  style="width: 40%; margin: 5px; padding: 7px" asp-for="SongGenre" asp-items="Model.Genres"> 
+            <option value="">Song genre</option>
+        </select>
+        <input style="padding: 5px; border-radius:5px" type="submit" value="Filter" />
+    </p>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Songs[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Songs[0].Genre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Songs[0].Album)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Songs[0].Artists)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Songs[0].FilePath)
+            </th>
+            <th style="text-align: center">Play</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Songs)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Genre)
+            </td>
+
+            <td>
+                @if (item.AlbumId != null)
+                {
+                    <a asp-controller="Albums" asp-action="Details" asp-route-id="@item.AlbumId"> @Html.DisplayFor(modelItem => item.Album.Name)</a>
+                }
+            </td>
+            <td>
+                @foreach (var artist in item.Artists)
+                {
+                    <a asp-controller="Artists" asp-action="Details" asp-route-id="@artist.ArtistId"> @artist.Artist.FullName </a> <br />
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FilePath)
+            </td>
+            <td>
+                <audio controls>
+                    <source src="@Url.Content(@item.FilePath)" type="audio/ogg">
+                </audio>
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

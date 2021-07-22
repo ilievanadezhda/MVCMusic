@@ -1,0 +1,70 @@
+﻿@model MVCMusic.Models.Artist
+
+@{
+    ViewData["Title"] = "Details";
+    var photoPath = "~/profilepictures/" + (Model.ProfilePicture ?? "blank.png");
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Artist</h4>
+    <hr />
+    <img src="@photoPath"
+         height="200" width="200"
+         asp-append-version="true"
+         class="rounded-circle"/>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BirthDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.BirthDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Age)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Age)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Albums)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var album in Model.Albums)
+            {
+                <a asp-controller="Albums" asp-action="Details" asp-route-id="@album.Id">
+                    @album.Name
+                </a> <br />
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Songs)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var song in Model.Songs)
+            {
+                <a asp-controller="Songs" asp-action="Details" asp-route-id="@song.SongId">
+                    @song.Song.Name
+                </a> <br />
+            }
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
