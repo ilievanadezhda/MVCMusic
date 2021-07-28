@@ -36,12 +36,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Songs[0].Artists)
             </th>
-            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-            {
-                <th>
-                    @Html.DisplayNameFor(model => model.Songs[0].FilePath)
-                </th>
-            }
             <th style="text-align: center">Play</th>
             <th></th>
         </tr>
@@ -69,18 +63,12 @@
                     <a asp-controller="Artists" asp-action="Details" asp-route-id="@artist.ArtistId"> @artist.Artist.FullName </a> <br />
                 }
             </td>
-            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-            {
-                <td>
-                    @Html.DisplayFor(modelItem => item.FilePath)
-                </td>
-            }
             <td>
                 <audio controls>
                     <source src="@Url.Content(@item.FilePath)" type="audio/ogg">
                 </audio>
             </td>
-            <td>
+            <td style="text-align: center">
                 <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details </a>
                 @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                 {
