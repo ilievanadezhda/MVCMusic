@@ -6,9 +6,12 @@
 
 <h1 style="text-align: center">Albums</h1>
 
-<p style="text-align: center">
-    <a asp-action="Create">Create New</a>
-</p>
+@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+{
+    <p style="text-align: center">
+        <a class="btn btn-success" asp-action="Create">Create New</a>
+    </p>
+}
 <form asp-controller="Albums" asp-action="Index" method="get">
     <p style="text-align: center">
         <input style="width: 30%; margin: 5px; padding: 5px" type="text" asp-for="SearchName" placeholder="Album name" />
@@ -17,8 +20,8 @@
         <input style="padding: 5px; border-radius:5px" type="submit" value="Filter" />
     </p>
 </form>
-<table class="table">
-    <thead>
+<table class="table table-striped">
+    <thead class="thead-dark">
         <tr>
             <th></th>
             <th>
@@ -34,39 +37,48 @@
                 @Html.DisplayNameFor(model => model.Albums[0].Artist)
             </th>
             <th></th>
+
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Albums) {
-var photoPath = "~/covers/" + (item.AlbumCover ?? "blank.png");
-        <tr>
-            <td>
-                <img src="@photoPath"
-                     class="rounded-circle"
-                     height="40" width="40"
-                     asp-append-version="true" />
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Year)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RecordLabel)
-            </td>
-            <td>
-                @if (item.ArtistId != null)
-                {
-                    <a asp-controller="Artists" asp-action="Details" asp-route-id="@item.ArtistId"> @Html.DisplayFor(modelItem => item.Artist.FullName)</a>
-                }
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Albums)
+        {
+            var photoPath = "~/covers/" + (item.AlbumCover ?? "blank.png");
+            <tr>
+                <td>
+                    <img src="@photoPath"
+                         class="rounded-circle"
+                         height="40" width="40"
+                         asp-append-version="true" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RecordLabel)
+                </td>
+                <td>
+                    @if (item.ArtistId != null)
+                    {
+                        <a asp-controller="Artists" asp-action="Details" asp-route-id="@item.ArtistId"> @Html.DisplayFor(modelItem => item.Artist.FullName)</a>
+                    }
+                </td>
+                <td>
+                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details </a> 
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit </a>
+
+                    } 
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

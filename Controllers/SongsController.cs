@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,7 @@ namespace MVCMusic.Controllers
         }
 
         // GET: Songs
+        [Authorize(Roles = "Admin, ApplicationUser")]
         public async Task<IActionResult> Index(string songGenre, string searchName)
         {
             IQueryable<Song> songs = _context.Song.AsQueryable();
@@ -48,6 +50,7 @@ namespace MVCMusic.Controllers
         }
 
         // GET: Songs/Details/5
+        [Authorize(Roles = "Admin, ApplicationUser")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -67,6 +70,7 @@ namespace MVCMusic.Controllers
         }
 
         // GET: Songs/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["AlbumId"] = new SelectList(_context.Set<Album>(), "Id", "Name");
@@ -78,6 +82,7 @@ namespace MVCMusic.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(IFormFile pUrl, [Bind("Id,Name,Genre,FilePath,AlbumId")] Song song)
         {
             //SongsController uploadUrl = new SongsController(_context, webHostingEnvironment);
@@ -94,6 +99,7 @@ namespace MVCMusic.Controllers
         }
 
         // GET: Songs/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -115,6 +121,7 @@ namespace MVCMusic.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, IFormFile pUrl, [Bind("Id,Name,Genre,FilePath,AlbumId")] Song song)
         {
             if (id != song.Id)
@@ -150,6 +157,7 @@ namespace MVCMusic.Controllers
         }
 
         // GET: Songs/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -171,6 +179,7 @@ namespace MVCMusic.Controllers
         // POST: Songs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var song = await _context.Song.FindAsync(id);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,7 @@ namespace MVCMusic.Controllers
         }
 
         // GET: Artists
+        [Authorize(Roles = "Admin, ApplicationUser")]
         public async Task<IActionResult> Index(string searchName, string searchSurname)
         {
             IQueryable<Artist> artists = _context.Artist.AsQueryable();
@@ -46,6 +48,7 @@ namespace MVCMusic.Controllers
         }
 
         // GET: Artists/Details/5
+        [Authorize(Roles = "Admin, ApplicationUser")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -64,6 +67,7 @@ namespace MVCMusic.Controllers
         }
 
         // GET: Artists/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -74,6 +78,7 @@ namespace MVCMusic.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,BirthDate")] Artist artist)
         {
             if (ModelState.IsValid)
@@ -86,6 +91,7 @@ namespace MVCMusic.Controllers
         }
 
         // GET: Artists/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -106,6 +112,7 @@ namespace MVCMusic.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, IFormFile pUrl, [Bind("Id,FirstName,LastName,BirthDate, ProfilePicture")] Artist artist)
         {
             ArtistsController uploadUrl = new ArtistsController(_context, webHostingEnvironment);
@@ -139,6 +146,7 @@ namespace MVCMusic.Controllers
         }
 
         // GET: Artists/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -158,6 +166,7 @@ namespace MVCMusic.Controllers
 
         // POST: Artists/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

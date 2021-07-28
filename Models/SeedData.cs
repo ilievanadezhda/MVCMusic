@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using MVCMusic.Areas.Identity.Data;
 using MVCMusic.Data;
 using System;
 using System.Collections.Generic;
@@ -10,12 +12,65 @@ namespace MVCMusic.Models
 {
     public class SeedData
     {
+        public static async Task CreateUserRoles(IServiceProvider serviceProvider)
+        {
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<MVCMusicUser>>();
+            IdentityResult roleResult;
+            
+            //Add Admin Role
+            var roleCheck = await RoleManager.RoleExistsAsync("Admin");
+            if (!roleCheck) { roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin")); }
+            MVCMusicUser user = await UserManager.FindByEmailAsync("admin@mvcmusic.com");
+            if (user == null)
+            {
+                var User = new MVCMusicUser();
+                User.Email = "admin@mvcmusic.com";
+                User.UserName = "admin@mvcmusic.com";
+                string userPWD = "Admin123";
+                IdentityResult chkUser = await UserManager.CreateAsync(User, userPWD);
+                //Add default User to Role Admin
+                if (chkUser.Succeeded) { var result1 = await UserManager.AddToRoleAsync(User, "Admin"); }
+            }
+
+            //Add ApplicationUser Role
+            roleCheck = await RoleManager.RoleExistsAsync("ApplicationUser");
+            if (!roleCheck) { roleResult = await RoleManager.CreateAsync(new IdentityRole("ApplicationUser")); }
+            user = await UserManager.FindByEmailAsync("nadezhda@mvcmusic.com");
+            if (user == null)
+            {
+                var User = new MVCMusicUser();
+                User.Email = "nadezhda@mvcmusic.com";
+                User.UserName = "nadezhda@mvcmusic.com";
+                string userPWD = "Nadezhda123";
+                IdentityResult chkUser = await UserManager.CreateAsync(User, userPWD);
+                if (chkUser.Succeeded) { var result1 = await UserManager.AddToRoleAsync(User, "ApplicationUser"); }
+            }
+            /*
+            //Add Artist Role
+            roleCheck = await RoleManager.RoleExistsAsync("Artist");
+            if (!roleCheck) { roleResult = await RoleManager.CreateAsync(new IdentityRole("Artist")); }
+            user = await UserManager.FindByEmailAsync("arianag@mvcmusic.com");
+            if (user == null)
+            {
+                var User = new MVCMusicUser();
+                User.Email = "arianag@mvcmusic.com";
+                User.UserName = "arianag@mvcmusic.com";
+                User.ArtistId = 2;
+                string userPWD = "Ariana123";
+                IdentityResult chkUser = await UserManager.CreateAsync(User, userPWD);
+                //Add default User to Role Admin
+                if (chkUser.Succeeded) { var result1 = await UserManager.AddToRoleAsync(User, "Artist"); }
+            }*/
+        }
+
         public static void Initialize(IServiceProvider serviceProvider)
         {
             using (var context = new MVCMusicContext(
             serviceProvider.GetRequiredService<
             DbContextOptions<MVCMusicContext>>()))
             {
+                CreateUserRoles(serviceProvider).Wait();
                 // Look for any movies.
                 if (context.Song.Any() || context.Album.Any() || context.Artist.Any())
                 {

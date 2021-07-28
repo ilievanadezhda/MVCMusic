@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using MVCMusic.Areas.Identity.Data;
 using MVCMusic.Models;
 
 namespace MVCMusic.Data
 {
-    public class MVCMusicContext : DbContext
+    public class MVCMusicContext : IdentityDbContext<MVCMusicUser>
     {
         public MVCMusicContext (DbContextOptions<MVCMusicContext> options)
             : base(options)
@@ -21,5 +23,10 @@ namespace MVCMusic.Data
         public DbSet<MVCMusic.Models.Artist> Artist { get; set; }
 
         public DbSet<MVCMusic.Models.SongArtist> SongArtist { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
     }
 }

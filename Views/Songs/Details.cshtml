@@ -29,6 +29,14 @@
             @Html.DisplayFor(model => model.FilePath)
         </dd>
         <dt class="col-sm-2">
+            Play
+        </dt>
+        <dd class="col-sm-10">
+            <audio controls>
+                <source src="@Url.Content(@Model.FilePath)" type="audio/ogg">
+            </audio>
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Album)
         </dt>
         <dd class="col-sm-10">

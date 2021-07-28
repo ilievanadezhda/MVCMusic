@@ -1,0 +1,40 @@
+﻿@model IEnumerable<MVCMusic.Areas.Identity.Data.MVCMusicUser>
+
+<h1 style="text-align:center"> All Users </h1>
+<div class="form-group" style="text-align:center">
+    <a asp-action="Create" class="btn btn-success">Create New</a>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Account ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Update</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (MVCMusic.Areas.Identity.Data.MVCMusicUser user in Model)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>
+                    <a class="btn btn-primary" asp-action="Update" asp-route-id="@user.Id">
+                        Update
+                    </a>
+                </td>
+                <td>
+                    <form asp-action="Delete" asp-route-id="@user.Id" method="post">
+                        <button type="submit" class="btn btn-danger">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
